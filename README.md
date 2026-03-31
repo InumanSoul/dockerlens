@@ -34,13 +34,6 @@ Grab the latest `.dmg` from [Releases](../../releases), open it, and drag Docker
 > xattr -cr ****/Applications/DockerLens.app
 > ```
 
-### Homebrew (coming soon)
-
-```bash
-brew tap InumanSoul/tap
-brew install --cask dockerlens
-```
-
 ## Usage
 
 1. **Click the tray icon** to open the popover
