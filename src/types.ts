@@ -16,6 +16,5 @@ export interface StorageStats {
 export interface Settings {
   limit_gb: number;
   auto_clean: boolean;
-  poll_interval_secs: number;
   breach_notified: boolean;
 }

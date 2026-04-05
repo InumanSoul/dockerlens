@@ -16,7 +16,6 @@ interface State {
 const DEFAULT_SETTINGS: Settings = {
   limit_gb: 5,
   auto_clean: false,
-  poll_interval_secs: 60,
   breach_notified: false,
 };
 

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { DockerImage } from "../types";
-import { CroissantIcon, Trash2Icon } from "lucide-react";
+import { ArrowLeft, Trash2 as Trash2Icon } from "lucide-react";
 
 interface Props {
   images: DockerImage[];
   onRemove: (id: string) => void;
   onRemoveAll: () => void;
   cleaning: boolean;
+  onBack: () => void;
 }
 
 function formatBytes(bytes: number): string {
@@ -22,16 +23,23 @@ function timeAgo(unix: number): string {
   return Math.floor(diff / 86400) + "d ago";
 }
 
-export function ImageList({ images, onRemove, onRemoveAll, cleaning }: Props) {
+export function ImageList({ images, onRemove, onRemoveAll, cleaning, onBack }: Props) {
   const [confirmAll, setConfirmAll] = useState(false);
   const [removing, setRemoving] = useState<string | null>(null);
 
   if (images.length === 0) {
     return (
-      <div className="empty-state">
-        <CroissantIcon size={48} className="empty-icon" />
-        <span className="empty-title">All clean, here's a croissant!</span>
-        <span className="empty-sub">No unused images found</span>
+      <div className="image-list-wrap">
+        <div className="view-header">
+          <button className="back-btn" onClick={onBack} title="Back">
+            <ArrowLeft size={20} />
+          </button>
+          <span className="view-title">Images</span>
+        </div>
+        <div className="empty-state">
+          <span className="empty-title">All clean</span>
+          <span className="empty-sub">No unused images found</span>
+        </div>
       </div>
     );
   }
@@ -54,6 +62,12 @@ export function ImageList({ images, onRemove, onRemoveAll, cleaning }: Props) {
 
   return (
     <div className="image-list-wrap">
+      <div className="view-header">
+        <button className="back-btn" onClick={onBack} title="Back">
+          <ArrowLeft size={20} />
+        </button>
+        <span className="view-title">Images</span>
+      </div>
       <div className="list-toolbar">
         <span className="list-count">{images.length} unused image{images.length !== 1 ? "s" : ""}</span>
         <button
@@ -62,7 +76,7 @@ export function ImageList({ images, onRemove, onRemoveAll, cleaning }: Props) {
           disabled={cleaning}
         >
           {cleaning && <span className="btn-spinner small" />}
-          {confirmAll ? "Confirm remove all?" : "Remove all"}
+          {confirmAll ? "Confirm — remove all?" : "Remove all"}
         </button>
       </div>
       <ul className="image-list">
