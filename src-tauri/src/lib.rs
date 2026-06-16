@@ -73,6 +73,24 @@ pub fn run() {
                 }
             });
 
+            // ── First-launch onboarding ──────────────────────────────────
+            // The app is tray-only (no dock icon) with a hidden window, so a
+            // brand-new user can't tell it launched. Show the popover once on
+            // the first run so they discover where it lives.
+            if let Ok(store) = app.store("settings.json") {
+                let onboarded = store
+                    .get("onboarded")
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false);
+                if !onboarded {
+                    window.center().ok();
+                    window.show().ok();
+                    window.set_focus().ok();
+                    store.set("onboarded", serde_json::json!(true));
+                    store.save().ok();
+                }
+            }
+
             // ── Background polling loop ──────────────────────────────────
             let app_handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {

@@ -5,15 +5,10 @@ on:
     tags: ['v*']
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        include:
-          - runner: macos-14        # Apple Silicon
-            target: aarch64-apple-darwin
-          - runner: macos-13        # Intel
-            target: x86_64-apple-darwin
-    runs-on: ${{ matrix.runner }}
+  release:
+    runs-on: macos-14            # Apple Silicon runner; cross-compiles the universal binary
+    permissions:
+      contents: write            # needed to create the GitHub release
 
     steps:
       - uses: actions/checkout@v4
@@ -25,14 +20,32 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - run: npm install
 
-      - run: npx tauri build --target ${{ matrix.target }}
-
-      - uses: softprops/action-gh-release@v2
+      # Builds the frontend (beforeBuildCommand), compiles a single universal
+      # (Intel + Apple Silicon) .app/.dmg, and creates a DRAFT GitHub release.
+      # Unsigned for now — see releaseBody for the Gatekeeper bypass users need.
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          draft: true
-          files: |
-            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
+          args: --target universal-apple-darwin
+          tagName: ${{ github.ref_name }}
+          releaseName: 'DockerLens ${{ github.ref_name }}'
+          releaseDraft: true
+          prerelease: false
+          releaseBody: |
+            A macOS menu bar app that monitors and cleans unused Docker images.
+
+            ## Install
+            1. Download `DockerLens_*_universal.dmg` below (works on both Intel and Apple Silicon).
+            2. Open the DMG and drag **DockerLens** to **Applications**.
+            3. DockerLens is **not yet code-signed**, so macOS Gatekeeper will block the first launch. Approve it once:
+               - Run in Terminal: `xattr -cr /Applications/DockerLens.app` then open the app, **or**
+               - Double-click DockerLens, then go to **System Settings → Privacy & Security**, scroll to the bottom and click **Open Anyway**.
+
+            ## Notes
+            - DockerLens has **no dock icon** — look for its icon in the menu bar (top-right). It opens automatically the first time you launch it.
+            - Requires macOS 13 (Ventura) or later, with Docker Desktop / Docker Engine running.

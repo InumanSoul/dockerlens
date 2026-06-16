@@ -27,12 +27,22 @@ A lightweight macOS menu bar app that monitors and cleans unused Docker images. 
 
 ### Download (recommended)
 
-Grab the latest `.dmg` from [Releases](../../releases), open it, and drag DockerLens to Applications.
+1. Grab the latest `DockerLens_*_universal.dmg` from [Releases](../../releases) — one download works on both Intel and Apple Silicon Macs.
+2. Open the DMG and drag **DockerLens** to **Applications**.
 
-> **Note:** The app is not yet code-signed. On first launch, right-click the app and select **Open**, then click **Open** in the dialog. You only need to do this once. Alternatively, run:
-> ```bash
-> xattr -cr ****/Applications/DockerLens.app
-> ```
+> **First launch — approve it once.** DockerLens is not yet code-signed, so macOS Gatekeeper blocks it the first time. Pick either:
+>
+> - **Terminal (fastest):**
+>   ```bash
+>   xattr -cr /Applications/DockerLens.app
+>   ```
+>   then open the app normally.
+>
+> - **No Terminal:** double-click DockerLens (you'll get a "cannot be opened" warning), then open **System Settings → Privacy & Security**, scroll to the bottom, and click **Open Anyway**.
+>
+> You only need to do this once.
+>
+> _DockerLens has **no dock icon** — after launch, look for its icon in the menu bar (top-right). It opens automatically the first time so you can find it._
 
 ## Usage
 

@@ -29,17 +29,17 @@ cargo check --manifest-path src-tauri/Cargo.toml  # Rust-only type check
 Three modules under `src-tauri/src/`:
 
 - **`lib.rs`** — App entry point. Sets up tray icon, hides dock icon (`ActivationPolicy::Accessory`), manages window toggle/positioning via `tauri-plugin-positioner`, and runs a tokio background polling loop. The polling loop checks unused image size against the user's limit and either auto-cleans or sends a macOS notification (once per breach, reset when usage drops).
-- **`docker.rs`** — Direct Docker Engine API client over Unix socket using `hyperlocal`. No Docker CLI dependency. Provides `list_unused_images()`, `remove_image()`, `remove_all_unused()`, `get_storage_stats()`. V1 only tracks dangling images (no tags).
+- **`docker.rs`** — Direct Docker Engine API client over Unix socket using `hyperlocal`. No Docker CLI dependency. Provides `list_unused_images()`, `remove_image()`, `remove_all_unused()`, `get_storage_stats()`. The `DockerImage` struct carries `tags` and a `reason` field (`"dangling" | "untagged" | "unused"`), but `list_unused_images()` currently only ever emits dangling images (empty tags) — the other reasons are reserved for future use. `get_storage_stats()` sums only unused images, so `total_bytes == unused_bytes`.
 - **`commands.rs`** — Thin IPC bridge: each `#[tauri::command]` delegates directly to `docker.rs` or reads/writes settings via `tauri-plugin-store`.
-- **`settings.rs`** — `Settings` struct with `limit_gb`, `auto_clean`, `poll_interval_secs`, `breach_notified`. Persisted via tauri-plugin-store as `settings.json`.
+- **`settings.rs`** — `Settings` struct with `limit_gb` (f64), `auto_clean`, `poll_interval_secs` (u64, min 10s, defaults 60), `breach_notified`. Persisted via tauri-plugin-store as `settings.json`. Note: `poll_interval_secs` no longer has a UI control after the minimalist redesign, so the frontend `Settings` interface (`types.ts`) omits it — the field lives Rust-side only.
 
 ### Frontend (React + Vite)
 
 Source lives in `src/`. Vite dev server runs on `:1420`.
 
 - **`hooks/useDockerImages.ts`** — Central hook that owns all `invoke()` calls. Fetches images, stats, settings in parallel on mount. Listens for `docker-stats-updated` events from the backend polling loop to auto-refresh.
-- **`App.tsx`** — Two tabs: Images (list of dangling images with remove buttons) and Settings (limit slider, auto-clean toggle, poll interval).
-- **`components/`** — `TrayHeader`, `StorageBar`, `ImageList`, `SettingsPanel`.
+- **`App.tsx`** — Single-window app with three views switched via local `view` state (not tabs): `dashboard` (default), `images`, `settings`. Dashboard navigates to the other two and back.
+- **`components/`** — `Dashboard` (landing view: storage summary + clean-all + nav), `ImageList` (per-image remove + remove-all), `SettingsPanel` (limit + auto-clean). `TrayHeader` and `StorageBar` still exist as files but are orphaned after the minimalist redesign — not imported anywhere. Don't extend them; fold any needed logic into `Dashboard`.
 - **`types.ts`** — Shared TypeScript interfaces (`DockerImage`, `StorageStats`, `Settings`) mirroring the Rust structs.
 - **`index.css`** — Complete dark-mode styling targeting macOS popover aesthetic. Uses CSS custom properties for theming.
 
