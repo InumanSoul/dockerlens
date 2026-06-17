@@ -6,11 +6,9 @@ A lightweight macOS menu bar app that monitors and cleans unused Docker images. 
 ![Tauri](https://img.shields.io/badge/Tauri-v2-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-<p align="center">
-  <img src=".github/assets/dockerlens-full.png" width="260" alt="DockerLens — Images tab" />
-  <img src=".github/assets/dockerlens-settings.png" width="260" alt="DockerLens — Settings tab" />
-  <img src=".github/assets/dockerlens-empty.png" width="260" alt="DockerLens — All clean" />
-</p>
+|   |   |
+|---|---|
+| ![DockerLens — Settings tab](.github/assets/dockerlens-settings.png) | ![DockerLens — All clean](.github/assets/dockerlens-empty.png) |
 
 ## Features
 
