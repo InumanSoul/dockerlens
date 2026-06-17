@@ -126,15 +126,6 @@
   .hero-grid {
     display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center;
   }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 6px 13px 6px 11px; border-radius: 999px;
-    background: var(--card); border: 1px solid var(--line-2); box-shadow: var(--shadow-sm);
-    margin-bottom: 26px;
-  }
-  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgba(52,199,89,0.18); animation: pulse 2.4s var(--ease) infinite; }
-  @keyframes pulse { 0%,100%{ box-shadow: 0 0 0 3px rgba(52,199,89,0.18);} 50%{ box-shadow: 0 0 0 6px rgba(52,199,89,0.05);} }
-
   h1 {
     font-family: var(--font-display); font-weight: 600;
     font-size: clamp(40px, 6.2vw, 70px); line-height: 0.98;
@@ -192,11 +183,11 @@
   .ring-mid .rp { display: flex; align-items: flex-start; line-height: 1; }
   .ring-mid .rp-n { font-family: var(--font-display); font-weight: 600; font-size: 52px; letter-spacing: -0.03em; color: var(--ink); }
   .ring-mid .rp-s { font-size: 19px; font-weight: 600; color: var(--ink-faint); margin-top: 5px; }
-  .ring-mid .rd { font-size: 10.5px; color: var(--ink-faint); margin-top: 7px; letter-spacing: .01em; }
-  .ring-mid .rd b { color: var(--ink); font-weight: 600; }
+  .ring-mid .rd { font-size: 10px; color: var(--ink-faint); margin-top: 8px; letter-spacing: .04em; text-align: center; line-height: 1.45; text-transform: uppercase; }
+  .ring-mid .rd b { display: block; color: var(--ink); font-weight: 600; font-size: 13.5px; letter-spacing: -0.01em; text-transform: none; margin-bottom: 1px; }
   .pop-seeall { display: block; text-align: center; font-size: 12.5px; color: var(--ink-soft); font-weight: 500; margin: 10px 0 14px; }
   .pop-foot { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); }
-  .pop-cta { width: 100%; padding: 13px; border-radius: 999px; background: #1C1C1E; color: #fff; font-family: var(--font-ui); font-weight: 600; font-size: 14px; border: none; cursor: default; }
+  .pop-cta { width: 100%; padding: 13px; border-radius: 999px; background: #1C1C1E; color: #fff; font-family: var(--font-ui); font-weight: 600; font-size: 14px; text-align: center; border: none; cursor: default; }
 
   /* settings variant */
   .set-head { display: flex; align-items: center; gap: 9px; margin-bottom: 22px; }
@@ -321,7 +312,7 @@
 
   @media (max-width: 860px) {
     .hero-grid { grid-template-columns: 1fr; gap: 56px; text-align: center; }
-    .eyebrow, .lede { margin-left: auto; margin-right: auto; }
+    .lede { margin-left: auto; margin-right: auto; }
     .lede { max-width: 38ch; }
     .hero-cta, .hero-meta { justify-content: center; }
     .hero { padding: 56px 0 72px; }
@@ -360,10 +351,6 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <span class="eyebrow">
-          <span class="dot"></span>
-          <span class="mono-label">macOS menu bar · open source</span>
-        </span>
         <h1>A <span class="accent">lens</span> on Docker's<br>disk hunger.</h1>
         <p class="lede">DockerLens lives in your menu bar, watches the unused images quietly piling up, and lets you reclaim the space in a single click.</p>
         <div class="hero-cta">
